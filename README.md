@@ -10,3 +10,5 @@ to run the app locally use
 ```
 
 node version v18.19.0
+
+Deplyed on https://zingy-choux-3ab174.netlify.app/

@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { ReactNode, createContext, useState } from "react";
 import { TableOptions } from "../../types/types";
 
 export const TableContext = createContext<{
@@ -15,4 +15,22 @@ export const TableContext = createContext<{
   setTableOptions: (_o: TableOptions<any>) => {},
 });
 
-export const TableProvider = TableContext.Provider;
+interface TableProviderProps<_T> {
+  children: ReactNode;
+}
+
+export const TableProvider = <T,>({ children }: TableProviderProps<T>) => {
+  const [tableOptions, setTableOptions] = useState<TableOptions<T>>({
+    page: 0,
+    rowsPerPage: 10,
+    orderBy: undefined,
+    order: "asc",
+    filter: "",
+  });
+
+  return (
+    <TableContext.Provider value={{ tableOptions, setTableOptions }}>
+      {children}
+    </TableContext.Provider>
+  );
+};

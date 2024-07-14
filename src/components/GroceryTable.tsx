@@ -1,14 +1,13 @@
-import Paper from "@mui/material/Paper";
-import { useState } from "react";
+import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { ColumnData, GroceryColumnIds, TableOptions } from "../types/types";
+import { ColumnData, GroceryColumnIds } from "../types/types";
 import { TableHeader } from "./table/TableHeader";
 import { TablePagination } from "./table/TablePagination";
 import { TableWrapper } from "./table/TableWrapper";
 import { TableHeaderRow } from "./table/TableHeaderRow";
 import { TableBody } from "./table/TableBody";
 import { loadGroceryDataService } from "../services/load-grocery-data-service";
-import { TableProvider } from "./table/TableContext";
+import { TableContext } from "./table/TableContext";
 
 const columns: ColumnData<GroceryColumnIds>[] = [
   {
@@ -40,15 +39,7 @@ const columns: ColumnData<GroceryColumnIds>[] = [
 ];
 
 export const GroceryTable = () => {
-  const [tableOptions, setTableOptions] = useState<
-    TableOptions<GroceryColumnIds>
-  >({
-    page: 0,
-    rowsPerPage: 10,
-    orderBy: "price",
-    order: "asc",
-    filter: "",
-  });
+  const { tableOptions } = useContext(TableContext);
 
   const { isPending, error, data } = useQuery({
     queryKey: ["groceryData", tableOptions],
@@ -64,25 +55,16 @@ export const GroceryTable = () => {
     );
 
   return (
-    <Paper
-      sx={{
-        minWidth: "500px",
-        overflow: "hidden",
-        p: "2rem",
-      }}
-      elevation={0}
-    >
-      <TableProvider value={{ tableOptions, setTableOptions }}>
-        <TableHeader
-          tableName="Today's groceries"
-          filterName="Filter by section"
-        />
-        <TableWrapper ariaLabel="grocery table">
-          <TableHeaderRow columns={columns} />
-          <TableBody rows={data?.groceries ?? []} columns={columns} />
-        </TableWrapper>
-        <TablePagination itemsCount={data?.itemsLength ?? 0} />
-      </TableProvider>
-    </Paper>
+    <>
+      <TableHeader
+        tableName="Today's groceries"
+        filterName="Filter by section"
+      />
+      <TableWrapper ariaLabel="grocery table">
+        <TableHeaderRow columns={columns} />
+        <TableBody rows={data?.groceries ?? []} columns={columns} />
+      </TableWrapper>
+      <TablePagination itemsCount={data?.itemsLength ?? 0} />
+    </>
   );
 };

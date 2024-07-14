@@ -4,21 +4,21 @@ import TableRow from "@mui/material/TableRow";
 import { Key } from "react";
 import { ColumnData } from "../../types/types";
 
-interface TableBodyProps<T, C> {
-  rows: T[];
-  columns: ColumnData<C>[];
+interface TableBodyProps<TableRowsType, TableCOlumnsType> {
+  rows: TableRowsType[];
+  columns: ColumnData<TableCOlumnsType>[];
 }
 
 export const TableBody = <
-  T extends {
+  TableRowsType extends {
     id: number;
     [key: string]: any;
   },
-  C extends keyof T
+  TableCOlumnsType extends keyof TableRowsType
 >({
   rows,
   columns,
-}: TableBodyProps<T, C>) => {
+}: TableBodyProps<TableRowsType, TableCOlumnsType>) => {
   return (
     <MUITableBody
       sx={{
